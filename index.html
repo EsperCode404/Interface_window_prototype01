@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="A life simulation game to track and improve your daily habits and stats">
+    <meta name="theme-color" content="#1a1a2e">
+    <title>Dashboard - Life Simulator</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" href="assets/images/favicon.ico" type="image/x-icon">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="assets/css/main.css">
+</head>
+<body>
+    <!-- Start Screen -->
+    <div id="startScreen">
+        <h1>Life Simulator</h1>
+        <button id="startButton">START</button>
+    </div>
+
+    <!-- Main App -->
+    <div id="app">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="logo">
+                <i class="fas fa-chart-pie"></i>
+                <h2>Life Simulator</h2>
+            </div>
+            
+            <nav class="main-nav">
+                <ul>
+                    <li class="active">
+                        <a href="#">
+                            <i class="fas fa-home"></i>
+                            <span>Dashboard</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-chart-line"></i>
+                            <span>Stats</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-tasks"></i>
+                            <span>Tasks</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-cog"></i>
+                            <span>Settings</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+            
+            <div class="upgrade-banner">
+                <i class="fas fa-rocket"></i>
+                <h3>Upgrade to Pro</h3>
+                <p>Get access to all features</p>
+                <button>Upgrade Now</button>
+                                        <label>Energy</label>
+                                        <div class="stat-bar">
+                                            <div class="stat-fill" style="width: 45%;"></div>
+                                        </div>
+                                        <span class="stat-value">45%</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="stat" id="health" data-stat="health">
+                                    <div class="stat-icon"><i class="fas fa-heart"></i></div>
+                                    <div class="stat-info">
+                                        <label>Health</label>
+                                        <div class="stat-bar">
+                                            <div class="stat-fill" style="width: 90%;"></div>
+                                        </div>
+                                        <span class="stat-value">90%</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Quests Panel -->
+                    <section class="quests-panel card">
+                        <div class="card-header">
+                            <h2><i class="fas fa-tasks"></i> Daily Quests</h2>
+                            <div class="quests-actions">
+                                <button class="btn-icon" id="clearCompleted" aria-label="Clear completed">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
+                                <button class="btn" id="addQuestBtn">
+                                    <i class="fas fa-plus"></i> Add Quest
+                                </button>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="add-quest-input">
+                                <input type="text" id="newQuest" placeholder="What's your next quest?" aria-label="New quest">
+                                <button class="btn" id="saveQuest">
+                                    <i class="fas fa-check"></i>
+                                </button>
+                            </div>
+                            <div class="quests-list" id="questsList">
+                                <!-- Quests will be added here by JavaScript -->
+                                <div class="empty-state">
+                                    <i class="fas fa-tasks"></i>
+                                    <p>No quests yet. Add your first quest to get started!</p>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Achievements Panel -->
+                    <section class="achievements-panel card">
+                        <div class="card-header">
+                            <h2><i class="fas fa-trophy"></i> Recent Achievements</h2>
+                            <a href="#" class="btn-text" id="viewAllAchievements">View All</a>
+                        </div>
+                        <div class="card-body">
+                            <div class="achievements-grid" id="recentAchievements">
+                                <!-- Achievements will be added here by JavaScript -->
+                                <div class="empty-state">
+                                    <i class="fas fa-trophy"></i>
+                                    <p>Complete quests to earn achievements!</p>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </main>
+
+            </div> <!-- End .main-content -->
+
+            <!-- Settings Modal -->
+            <div class="modal" id="settingsModal">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3>Settings</h3>
+                        <button class="btn-icon close-modal" aria-label="Close settings">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="setting-group">
+                            <h4>Theme</h4>
+                            <div class="theme-options">
+                                <button class="theme-option" data-theme="light">Light</button>
+                                <button class="theme-option" data-theme="dark">Dark</button>
+                                <button class="theme-option" data-theme="system">System</button>
+                            </div>
+                        </div>
+                        <div class="setting-group">
+                            <h4>Notifications</h4>
+                            <label class="switch">
+                                <input type="checkbox" id="enableNotifications" checked>
+                                <span class="slider"></span>
+                                <span class="label">Enable notifications</span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-secondary close-modal">Cancel</button>
+                        <button class="btn btn-primary" id="saveSettings">Save Changes</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Notification Toast -->
+            <div class="notification-toast" id="notification">
+                <div class="toast-content">
+                    <div class="toast-icon">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <div class="toast-message" id="notificationMessage">
+                        Notification message goes here
+                    </div>
+                    <button class="toast-close" aria-label="Close notification">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="toast-progress"></div>
+            </div>
+        </div> <!-- End .app-container -->
+    </div> <!-- End .game-interface -->
+
+    <!-- JavaScript -->
+    <script src="assets/js/app.js"></script>
+</body>
+</html>
