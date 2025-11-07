@@ -1,162 +1,107 @@
 // DOM Elements
-let startScreen;
-let startButton;
-let app;
-let currentDateElement;
+const progressBar = document.querySelector('.loading-progress');
+const percentText = document.querySelector('.percent-text');
+const logContainer = document.getElementById('log-container');
+const logStatus = document.querySelector('.log-status');
+const bootScreen = document.getElementById('boot-screen');
+const app = document.getElementById('app');
 
-// Initialize the app
-function initApp() {
-    console.log('Initializing app...');
-    
-    // Get DOM elements
-    startScreen = document.getElementById('startScreen');
-    startButton = document.getElementById('startButton');
-    app = document.getElementById('app');
-    currentDateElement = document.getElementById('currentDate');
-    
-    // Verify elements exist
-    console.log('startScreen:', startScreen);
-    console.log('startButton:', startButton);
-    console.log('app:', app);
-    console.log('currentDateElement:', currentDateElement);
-    
-    // Set current date
-    if (currentDateElement) {
-        updateDateTime();
-        // Update time every minute
-        setInterval(updateDateTime, 60000);
+// Boot messages sequence
+const bootLines = [
+  "Initializing neural core...",
+  "Loading user profile...",
+  "Verifying data integrity...",
+  "Calibrating virtual environment...",
+  "Linking sensory systems...",
+  "Finalizing system startup..."
+];
+
+let progress = 0;
+let currentLine = 0;
+
+/**
+ * Types out text with a typing animation
+ * @param {string} text - The text to type out
+ * @param {Function} callback - Function to call when typing is complete
+ */
+function typeLine(text, callback) {
+  let i = 0;
+  const line = document.createElement("p");
+  line.className = "log-line";
+  logContainer.appendChild(line);
+
+  const typer = setInterval(() => {
+    line.textContent = "> " + text.slice(0, i++);
+    if (i > text.length) {
+      clearInterval(typer);
+      line.style.border = "none"; // Remove cursor after line is done
+      if (callback) callback();
     }
-    
-    // Add event listeners
-    console.log('Adding event listeners...');
-    if (startButton) {
-        startButton.addEventListener('click', startGame);
-        console.log('Start button event listener added');
-    } else {
-        console.error('Start button not found!');
-    }
-    
-    // Initialize tooltips
-    initTooltips();
-    
-    // Initialize sidebar navigation
-    initSidebar();
-    
-    // Initialize other UI components
-    initUIComponents();
-    
-    console.log('App initialized');
+  }, 40); // Typing speed (lower = faster)
 }
 
-// Update date and time display
-function updateDateTime() {
-    const now = new Date();
-    const dateOptions = { 
-        weekday: 'long', 
-        year: 'numeric', 
-        month: 'long', 
-        day: 'numeric' 
-    };
-    const timeOptions = {
-        hour: '2-digit',
-        minute: '2-digit',
-        hour12: true
-    };
-    
-    currentDateElement.textContent = now.toLocaleDateString('en-US', dateOptions) + ' • ' + 
-                                   now.toLocaleTimeString('en-US', timeOptions);
-}
-
-// Initialize tooltips
-function initTooltips() {
-    const tooltipElements = document.querySelectorAll('[data-tooltip]');
-    
-    tooltipElements.forEach(element => {
-        const tooltipText = element.getAttribute('data-tooltip');
-        const tooltip = document.createElement('span');
-        tooltip.className = 'tooltip';
-        tooltip.textContent = tooltipText;
-        element.appendChild(tooltip);
-        
-        // Position tooltip
-        element.addEventListener('mouseenter', () => {
-            const rect = element.getBoundingClientRect();
-            tooltip.style.left = `${rect.left + (element.offsetWidth - tooltip.offsetWidth) / 2}px`;
-            tooltip.style.top = `${rect.top - tooltip.offsetHeight - 10}px`;
-            tooltip.classList.add('show');
-        });
-        
-        element.addEventListener('mouseleave', () => {
-            tooltip.classList.remove('show');
-        });
+/**
+ * Handles the next step in the boot sequence
+ */
+function nextStep() {
+  if (currentLine < bootLines.length) {
+    typeLine(bootLines[currentLine++], () => {
+      // Update progress based on number of completed steps
+      progress = Math.min(100, Math.floor((currentLine / bootLines.length) * 100));
+      
+      // Update progress bar and percentage
+      if (progressBar) progressBar.style.width = `${progress}%`;
+      if (percentText) percentText.textContent = `${progress}%`;
+      
+      // Update status with current action
+      if (logStatus) {
+        logStatus.textContent = `Status: ${bootLines[currentLine - 1]}`;
+      }
+      
+      // Add a small delay before next step
+      setTimeout(nextStep, 400);
     });
-}
-
-// Initialize sidebar navigation
-function initSidebar() {
-    const navItems = document.querySelectorAll('.nav-item');
-    
-    navItems.forEach(item => {
-        item.addEventListener('click', (e) => {
-            // Remove active class from all items
-            navItems.forEach(navItem => navItem.classList.remove('active'));
-            // Add active class to clicked item
-            item.classList.add('active');
-            
-            // Here you would typically load the appropriate content
-            // based on which nav item was clicked
-            const section = item.getAttribute('data-section');
-            if (section) {
-                // Load section content
-                console.log(`Loading section: ${section}`);
-            }
-        });
-    });
-}
-
-// Initialize other UI components
-function initUIComponents() {
-    // Initialize any interactive components here
-    // For example, modals, dropdowns, etc.
-    
-    // Example: Toggle notification panel
-    const notificationIcon = document.querySelector('.notification-icon');
-    if (notificationIcon) {
-        notificationIcon.addEventListener('click', (e) => {
-            e.stopPropagation();
-            // Toggle notification panel
-            console.log('Toggle notifications');
-        });
+  } else {
+    // Boot sequence complete
+    if (logStatus) {
+      logStatus.textContent = "Status: Boot complete ✓";
     }
     
-    // Close notifications when clicking outside
-    document.addEventListener('click', () => {
-        // Close any open dropdowns/modals
-    });
-}
-
-// Start the game
-function startGame() {
-    console.log('Start game clicked');
-    
-    if (startScreen) {
-        console.log('Hiding start screen');
-        startScreen.classList.add('hidden');
-    } else {
-        console.error('Start screen not found!');
-    }
-    
-    // Add a small delay before showing the game interface
+    // Fade out boot screen and show app
     setTimeout(() => {
-        if (app) {
-            console.log('Showing app');
-            app.classList.add('visible');
-            // Additional initialization can go here
-        } else {
-            console.error('App element not found!');
-        }
-    }, 500);
+      if (bootScreen) {
+        bootScreen.style.transition = 'opacity 1s ease-in-out';
+        bootScreen.style.opacity = '0';
+        
+        // After fade out, hide boot screen and show app
+        setTimeout(() => {
+          bootScreen.style.display = 'none';
+          if (app) {
+            app.style.display = 'block';
+            // Initialize the app
+            initApp();
+          }
+        }, 1000);
+      }
+    }, 800);
+  }
 }
 
-// Initialize the app when the DOM is fully loaded
-document.addEventListener('DOMContentLoaded', initApp);
+/**
+ * Initialize the main application
+ */
+function initApp() {
+  console.log('App initialized');
+  // Your app initialization code will go here
+}
+
+// Start the boot sequence when the page loads
+document.addEventListener('DOMContentLoaded', () => {
+  // Hide app content until loading is complete
+  if (app) app.style.display = 'none';
+  
+  // Start the boot sequence after a short delay
+  setTimeout(() => {
+    nextStep();
+  }, 800);
+});
